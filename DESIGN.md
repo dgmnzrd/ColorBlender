@@ -2,9 +2,10 @@
 
 ## 1. Design direction
 
-Color Blender is a native macOS utility.
+Color Blender is a native macOS utility implemented with Objective-C
+and AppKit.
 
-The interface should feel at home on macOS 27 and use native AppKit
+The interface should feel at home on macOS and use native AppKit
 components and system behaviors whenever possible.
 
 Design priorities:
@@ -18,6 +19,9 @@ Design priorities:
 7. Minimal use of custom drawing
 
 The application should not imitate a web application.
+
+The native design is based on AppKit APIs and does not depend on an
+Xcode project, Interface Builder, Storyboards or XIB files.
 
 ---
 
@@ -35,7 +39,8 @@ Do not force:
 NSAppearanceNameAqua
 NSAppearanceNameDarkAqua
 
-unless a future feature explicitly allows overriding the system setting.
+unless a future feature explicitly allows overriding the system
+setting.
 
 Views should inherit their appearance from NSApplication / NSWindow.
 
@@ -109,7 +114,8 @@ and fixed UI colors such as:
 #F5F5F5
 #222222
 
-because these may become unreadable when the system appearance changes.
+because these may become unreadable when the system appearance
+changes.
 
 Exceptions are colors representing actual user color data.
 
@@ -122,9 +128,9 @@ For example:
 must remain exactly those colors because they are Color Blender data,
 not interface colors.
 
-Literal black or white may also be used when they are part of the
-user's actual color data or when calculated as a contrast color for
-content displayed over a literal color swatch.
+Literal black or white may also be used when they are actual color
+data or when calculated as a contrast color for content displayed over
+a literal color swatch.
 
 ---
 
@@ -373,7 +379,7 @@ modify the underlying color value.
 
 ## 13. Web-safe color picker
 
-The WebSafeColorPickerView reproduces the original Color Blender
+The WebSafeColorPickerView reproduces the classic Color Blender
 web-safe color grid.
 
 The grid contains the standard web-safe RGB combinations based on:
@@ -388,8 +394,8 @@ FF
 Selecting a web-safe color must return the literal selected color to
 the application.
 
-The grid is color data, not system interface chrome, so its colors must
-remain identical in Light and Dark Mode.
+The grid is color data, not system interface chrome, so its colors
+must remain identical in Light and Dark Mode.
 
 Selection feedback should remain visible without permanently altering
 the selected color.
@@ -517,9 +523,38 @@ for low-level color mathematics.
 Color parsing, representation and interpolation should remain reusable
 outside the interface layer.
 
+The architecture must remain independent from IDE-specific project
+formats.
+
+The application must be buildable from source using the repository
+Makefile and command-line development tools.
+
 ---
 
-## 19. V1 scope
+## 19. Development constraints
+
+The application interface is implemented programmatically using
+Objective-C and AppKit.
+
+The project does not depend on:
+
+- Interface Builder
+- Storyboards
+- XIB files
+- Xcode project files
+- Xcode workspace files
+
+Development is performed using Visual Studio Code.
+
+The build process is defined by the repository Makefile and executed
+using Apple Clang and the macOS SDK.
+
+IDE-specific files must not become a requirement for building or
+maintaining the application.
+
+---
+
+## 20. V1 scope
 
 Version 1 reproduces the functionality of the original Color Blender.
 
@@ -549,7 +584,7 @@ advanced palette features are outside V1.
 
 ---
 
-## 20. Version 1.0.0 design freeze
+## 21. Version 1.0.0 design freeze
 
 This document defines the interface and visual behavior expected for
 Color Blender 1.0.0.
@@ -557,7 +592,7 @@ Color Blender 1.0.0.
 Changes that fix implementation defects while preserving these
 behaviors may be released as patch versions.
 
-Backward-compatible additions may be introduced in minor versions.
+Backward-compatible functionality may be introduced in minor versions.
 
 Major changes to the application's interaction model, supported
 formats or established behavior should be evaluated for a future major

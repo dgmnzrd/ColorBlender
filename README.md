@@ -1,11 +1,15 @@
 # Color Blender
 
 Color Blender is a native macOS utility for generating color palettes
-between two colors.
+between two endpoint colors.
 
-It is a modern native macOS implementation inspired by the original
-Color Blender tool, preserving its core color blending workflow while
-using AppKit and current macOS interface conventions.
+It is implemented in Objective-C using AppKit and is designed to behave
+like a native macOS application while preserving the core workflow of
+the original Color Blender tool.
+
+The project is developed in Visual Studio Code and built directly from
+the command line using Make and Apple Clang. It does not use or require
+an Xcode project or workspace.
 
 ## Version
 
@@ -15,7 +19,7 @@ using AppKit and current macOS interface conventions.
 
 ## Features
 
-Color Blender 1.0.0 supports:
+Color Blender 1.0.0 includes:
 
 - HEX color input
 - RGB color input
@@ -24,24 +28,26 @@ Color Blender 1.0.0 supports:
 - 1–10 midpoint colors
 - RGB color interpolation
 - Generated palettes of up to 12 colors
-- Web-safe color picker
+- Classic web-safe color picker
 - Blend and Clear actions
 - Automatic Light Mode and Dark Mode
 - Native macOS controls and behaviors
+- Keyboard-compatible controls
+- Invalid-input handling
 
 ---
 
 ## How it works
 
-Choose two colors:
+Choose two endpoint colors:
 
     Color 1: #5B21B6
     Color 2: #FF5B00
 
-Select the number of midpoint colors and press **Blend Colors**.
+Select the desired number of midpoint colors and press **Blend Colors**.
 
-Color Blender interpolates between both endpoint colors and generates
-the resulting palette in order.
+Color Blender interpolates between both endpoint colors in RGB space
+and generates the resulting palette in order.
 
 For example:
 
@@ -71,8 +77,8 @@ count.
 
     rgb(36%,13%,71%)
 
-Changing the selected format changes the textual representation of the
-colors without changing the underlying color values.
+Changing the selected format changes the textual representation of
+valid colors without changing their underlying color values.
 
 ---
 
@@ -80,7 +86,7 @@ colors without changing the underlying color values.
 
 Color Blender supports between **1 and 10 midpoint colors**.
 
-The generated palette therefore contains:
+A generated palette contains:
 
     Color 1
     +
@@ -88,7 +94,7 @@ The generated palette therefore contains:
     +
     Color 2
 
-The maximum palette size is **12 colors**.
+The maximum palette size is therefore **12 colors**.
 
 ---
 
@@ -96,7 +102,7 @@ The maximum palette size is **12 colors**.
 
 Color Blender includes the classic web-safe color grid.
 
-Web-safe colors are generated from combinations of:
+Web-safe colors are generated from RGB combinations of:
 
     00
     33
@@ -105,19 +111,15 @@ Web-safe colors are generated from combinations of:
     CC
     FF
 
-A selected web-safe color can be applied directly to the active color
-input.
+A selected web-safe color can be applied to the active color input.
 
 ---
 
 ## Native macOS interface
 
-Color Blender is designed as a native macOS application.
+Color Blender uses AppKit and native macOS behaviors.
 
-The interface uses AppKit and follows the current system appearance
-automatically.
-
-Supported system behaviors include:
+The application supports:
 
 - Light Mode
 - Dark Mode
@@ -125,28 +127,64 @@ Supported system behaviors include:
 - Retina rendering
 - Keyboard focus
 - Native window resizing
-- Native macOS controls
+- Standard macOS window behavior
 
-The application does not force a specific appearance.
+The application follows the system appearance automatically and does
+not force a specific Light or Dark appearance.
+
+---
+
+## Development environment
+
+Color Blender is developed using **Visual Studio Code**.
+
+The project intentionally does not use:
+
+- `.xcodeproj`
+- `.xcworkspace`
+- Xcode schemes
+- Xcode-specific build configuration
+
+Compilation is handled directly by the included `Makefile`.
+
+Xcode is not part of the development or build workflow.
 
 ---
 
 ## Requirements
 
-- macOS 27 or later
-- Xcode with macOS 27 SDK support
+To build Color Blender you need:
+
+- macOS
+- Apple Clang
+- macOS SDK
+- `make`
+
+These development tools may be provided by Apple's Command Line Tools.
 
 ---
 
-## Technology
+## Building
 
-Color Blender is implemented using:
+Build the application:
 
-- Objective-C
-- AppKit
-- Auto Layout
+    make
 
-No web UI framework is used.
+The resulting application bundle is created at:
+
+    build/ColorBlender.app
+
+Build and launch the application:
+
+    make run
+
+Remove generated build files:
+
+    make clean
+
+Perform a clean rebuild:
+
+    make rebuild
 
 ---
 
@@ -154,70 +192,112 @@ No web UI framework is used.
 
 The source code is organized by responsibility:
 
-    App/
-        Application lifecycle
+    ColorBlender/
+    ├── App/
+    ├── Controllers/
+    ├── Models/
+    ├── Services/
+    └── Views/
 
-    Controllers/
-        Application interaction and coordination
+    Tests/
 
-    Models/
-        Color representation
+    Makefile
+    README.md
+    DESIGN.md
+    CLAUDE.md
 
-    Services/
-        Color parsing and interpolation
+### App
 
-    Views/
-        Native AppKit interface components
+Contains the application lifecycle.
 
-This keeps interface code separate from color processing and
-application lifecycle responsibilities.
+This includes application startup, window creation and other
+application-level responsibilities.
+
+Visual layout and color-processing logic do not belong here.
+
+### Controllers
+
+Coordinates application interaction.
+
+`MainViewController` acts as the main coordinator between the
+application views and color-processing services.
+
+### Models
+
+Contains color representation and conversion logic.
+
+`CBColor` represents colors independently from the interface and
+supports parsing and serialization of the supported color formats.
+
+### Services
+
+Contains reusable application logic.
+
+`ColorBlenderEngine` performs RGB interpolation independently from the
+user interface.
+
+### Views
+
+Contains native AppKit interface components.
+
+This includes:
+
+- `ColorInputView`
+- `PaletteView`
+- `WebSafeColorPickerView`
+
+Views are responsible for presentation and user interaction, not color
+interpolation or application lifecycle behavior.
 
 ---
 
-## Main components
+## Architecture
 
-### MainViewController
+The application follows a simple separation of responsibilities:
 
-Coordinates the main Color Blender interface and user interactions.
+    App
+     │
+     ▼
+    Controllers
+     │
+     ├──────────────► Views
+     │
+     ▼
+    Services
+     │
+     ▼
+    Models
 
-### ColorInputView
+Views communicate user interaction back to the main controller using
+delegate protocols.
 
-Displays and edits an individual color input.
-
-### PaletteView
-
-Displays the generated color palette and textual color values.
-
-### WebSafeColorPickerView
-
-Provides the classic web-safe color selection grid.
-
-### ColorBlenderEngine
-
-Handles color interpolation and palette generation.
-
-### CBColor
-
-Represents color data independently from the interface.
+`MainViewController` remains the central coordination point instead of
+using shared mutable application state.
 
 ---
 
-## Building
+## Tests
 
-1. Open the Color Blender Xcode project.
-2. Select the Color Blender macOS target.
-3. Choose a compatible Mac destination.
-4. Build and run the application using Xcode.
+Test source files are stored under:
 
-Default shortcut:
+    Tests/
 
-    Command + R
+The test infrastructure is independent from the normal application
+build.
+
+The standard application build is performed through:
+
+    make
+
+Tests should only be considered part of the automated development
+workflow when they can be executed directly from the command line
+without requiring an Xcode project or workspace.
 
 ---
 
 ## Design
 
-Interface and design decisions are documented in:
+Application design and interface conventions are documented in:
 
     DESIGN.md
 
@@ -227,8 +307,8 @@ The design system defines:
 - semantic system colors
 - typography
 - layout
-- controls
-- color inputs
+- native controls
+- color input behavior
 - palette presentation
 - web-safe color picker behavior
 - accessibility
@@ -238,9 +318,7 @@ The design system defines:
 
 ## Versioning
 
-Color Blender follows Semantic Versioning.
-
-Version numbers use:
+Color Blender follows Semantic Versioning:
 
     MAJOR.MINOR.PATCH
 
@@ -250,7 +328,7 @@ For example:
 
 ### MAJOR
 
-Incremented for incompatible or breaking changes.
+Incremented when incompatible changes are introduced.
 
 ### MINOR
 
@@ -258,7 +336,9 @@ Incremented when backward-compatible functionality is added.
 
 ### PATCH
 
-Incremented for backward-compatible bug fixes.
+Incremented for backward-compatible bug fixes, maintenance changes,
+or corrections that do not introduce new functionality or break
+existing behavior.
 
 ---
 
@@ -267,10 +347,10 @@ Incremented for backward-compatible bug fixes.
 Version 1.0.0 establishes the first stable release of the native
 Color Blender application.
 
-The release reproduces the core functionality of the original Color
-Blender while providing a native macOS interface and modern system
-behavior.
+The release reproduces the core Color Blender workflow using a native
+Objective-C and AppKit implementation.
 
-Future releases may introduce additional color spaces, algorithms,
-export options and palette tools without changing the goals of the
-1.0.0 release.
+The 1.0.0 release establishes the baseline for future development.
+
+New color spaces, additional interpolation algorithms, export options
+and advanced palette tools are outside the scope of version 1.0.0.
