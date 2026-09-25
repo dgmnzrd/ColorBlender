@@ -4,11 +4,11 @@
 #import "ColorBlenderEngine.h"
 #import "ColorInputView.h"
 #import "PaletteView.h"
-#import "WebSafeColorPickerView.h"
+#import "ColorPaletteView.h"
 
 @interface MainViewController ()
     <ColorInputViewDelegate,
-     WebSafeColorPickerViewDelegate>
+     ColorPaletteViewDelegate>
 
 @property (nonatomic, strong) NSTextField *titleLabel;
 @property (nonatomic, strong) NSTextField *subtitleLabel;
@@ -27,14 +27,14 @@
 
 @property (nonatomic, strong) NSView *verticalSeparator;
 
-@property (nonatomic, strong) NSTextField *webSafeTitleLabel;
-@property (nonatomic, strong) NSTextField *webSafeSubtitleLabel;
+@property (nonatomic, strong) NSTextField *colorPaletteTitleLabel;
+@property (nonatomic, strong) NSTextField *colorPaletteSubtitleLabel;
 
 @property (nonatomic, strong)
-    NSSegmentedControl *webSafeTargetControl;
+    NSSegmentedControl *colorPaletteTargetControl;
 
 @property (nonatomic, strong)
-    WebSafeColorPickerView *webSafePicker;
+    ColorPaletteView *colorPaletteView;
 
 @property (nonatomic, assign) CBColorFormat currentFormat;
 
@@ -231,7 +231,7 @@
 
 
     // =========================================================
-    // Palette
+    // Generated Palette
     // =========================================================
 
     self.paletteView =
@@ -258,36 +258,36 @@
 
 
     // =========================================================
-    // Web Safe Colors
+    // Color Palette
     // =========================================================
 
-    self.webSafeTitleLabel =
-        [NSTextField labelWithString:@"Web Safe Colors"];
+    self.colorPaletteTitleLabel =
+        [NSTextField labelWithString:@"Color Palette"];
 
-    self.webSafeTitleLabel.font =
+    self.colorPaletteTitleLabel.font =
         [NSFont systemFontOfSize:13
                           weight:NSFontWeightSemibold];
 
-    self.webSafeTitleLabel.translatesAutoresizingMaskIntoConstraints =
+    self.colorPaletteTitleLabel.translatesAutoresizingMaskIntoConstraints =
         NO;
 
 
-    self.webSafeSubtitleLabel =
+    self.colorPaletteSubtitleLabel =
         [NSTextField labelWithString:
             @"Select a target, then choose a color."];
 
-    self.webSafeSubtitleLabel.font =
+    self.colorPaletteSubtitleLabel.font =
         [NSFont systemFontOfSize:11
                           weight:NSFontWeightRegular];
 
-    self.webSafeSubtitleLabel.textColor =
+    self.colorPaletteSubtitleLabel.textColor =
         NSColor.secondaryLabelColor;
 
-    self.webSafeSubtitleLabel.translatesAutoresizingMaskIntoConstraints =
+    self.colorPaletteSubtitleLabel.translatesAutoresizingMaskIntoConstraints =
         NO;
 
 
-    self.webSafeTargetControl =
+    self.colorPaletteTargetControl =
         [NSSegmentedControl
             segmentedControlWithLabels:@[
                 @"Color 1",
@@ -297,18 +297,18 @@
             target:nil
             action:nil];
 
-    self.webSafeTargetControl.selectedSegment =
+    self.colorPaletteTargetControl.selectedSegment =
         0;
 
-    self.webSafeTargetControl.translatesAutoresizingMaskIntoConstraints =
+    self.colorPaletteTargetControl.translatesAutoresizingMaskIntoConstraints =
         NO;
 
 
-    self.webSafePicker =
-        [[WebSafeColorPickerView alloc]
+    self.colorPaletteView =
+        [[ColorPaletteView alloc]
             initWithFrame:NSZeroRect];
 
-    self.webSafePicker.delegate =
+    self.colorPaletteView.delegate =
         self;
 
 
@@ -335,10 +335,10 @@
 
     [self.view addSubview:self.verticalSeparator];
 
-    [self.view addSubview:self.webSafeTitleLabel];
-    [self.view addSubview:self.webSafeSubtitleLabel];
-    [self.view addSubview:self.webSafeTargetControl];
-    [self.view addSubview:self.webSafePicker];
+    [self.view addSubview:self.colorPaletteTitleLabel];
+    [self.view addSubview:self.colorPaletteSubtitleLabel];
+    [self.view addSubview:self.colorPaletteTargetControl];
+    [self.view addSubview:self.colorPaletteView];
 
 
     // =========================================================
@@ -347,9 +347,7 @@
 
     [NSLayoutConstraint activateConstraints:@[
 
-        // -----------------------------------------------------
         // Header
-        // -----------------------------------------------------
 
         [self.titleLabel.topAnchor
             constraintEqualToAnchor:self.view.topAnchor
@@ -368,9 +366,7 @@
             constraintEqualToAnchor:self.titleLabel.leadingAnchor],
 
 
-        // -----------------------------------------------------
         // Vertical Separator
-        // -----------------------------------------------------
 
         [self.verticalSeparator.topAnchor
             constraintEqualToAnchor:self.color1Input.topAnchor],
@@ -387,9 +383,7 @@
             constraintEqualToConstant:1],
 
 
-        // -----------------------------------------------------
         // Color 1
-        // -----------------------------------------------------
 
         [self.color1Input.topAnchor
             constraintEqualToAnchor:self.subtitleLabel.bottomAnchor
@@ -404,9 +398,7 @@
                            constant:-24],
 
 
-        // -----------------------------------------------------
         // Color 2
-        // -----------------------------------------------------
 
         [self.color2Input.topAnchor
             constraintEqualToAnchor:self.color1Input.bottomAnchor
@@ -419,9 +411,7 @@
             constraintEqualToAnchor:self.color1Input.trailingAnchor],
 
 
-        // -----------------------------------------------------
         // Format
-        // -----------------------------------------------------
 
         [formatLabel.topAnchor
             constraintEqualToAnchor:self.color2Input.bottomAnchor
@@ -442,9 +432,7 @@
             constraintEqualToConstant:220],
 
 
-        // -----------------------------------------------------
         // Midpoints
-        // -----------------------------------------------------
 
         [midpointsLabel.topAnchor
             constraintEqualToAnchor:formatLabel.topAnchor],
@@ -472,9 +460,7 @@
             constraintEqualToAnchor:self.midpointsField.centerYAnchor],
 
 
-        // -----------------------------------------------------
         // Clear
-        // -----------------------------------------------------
 
         [self.clearButton.leadingAnchor
             constraintEqualToAnchor:self.midpointsStepper.trailingAnchor
@@ -487,9 +473,7 @@
             constraintLessThanOrEqualToAnchor:self.color1Input.trailingAnchor],
 
 
-        // -----------------------------------------------------
-        // Palette
-        // -----------------------------------------------------
+        // Generated Palette
 
         [self.paletteView.topAnchor
             constraintEqualToAnchor:self.formatControl.bottomAnchor
@@ -506,69 +490,62 @@
                            constant:-32],
 
 
-        // -----------------------------------------------------
-        // Web Safe Title
-        // -----------------------------------------------------
+        // Color Palette Title
 
-        [self.webSafeTitleLabel.topAnchor
+        [self.colorPaletteTitleLabel.topAnchor
             constraintEqualToAnchor:self.color1Input.topAnchor],
 
-        [self.webSafeTitleLabel.leadingAnchor
+        [self.colorPaletteTitleLabel.leadingAnchor
             constraintEqualToAnchor:self.verticalSeparator.trailingAnchor
                            constant:24],
 
-        [self.webSafeTitleLabel.trailingAnchor
+        [self.colorPaletteTitleLabel.trailingAnchor
             constraintLessThanOrEqualToAnchor:self.view.trailingAnchor
-                                      constant:-32],
+                                      constant:-24],
 
 
-        // -----------------------------------------------------
-        // Web Safe Subtitle
-        // -----------------------------------------------------
+        // Color Palette Subtitle
 
-        [self.webSafeSubtitleLabel.topAnchor
-            constraintEqualToAnchor:self.webSafeTitleLabel.bottomAnchor
+        [self.colorPaletteSubtitleLabel.topAnchor
+            constraintEqualToAnchor:self.colorPaletteTitleLabel.bottomAnchor
                            constant:4],
 
-        [self.webSafeSubtitleLabel.leadingAnchor
-            constraintEqualToAnchor:self.webSafeTitleLabel.leadingAnchor],
+        [self.colorPaletteSubtitleLabel.leadingAnchor
+            constraintEqualToAnchor:self.colorPaletteTitleLabel.leadingAnchor],
 
-        [self.webSafeSubtitleLabel.trailingAnchor
+        [self.colorPaletteSubtitleLabel.trailingAnchor
             constraintLessThanOrEqualToAnchor:self.view.trailingAnchor
-                                      constant:-32],
+                                      constant:-24],
 
 
-        // -----------------------------------------------------
-        // Web Safe Target
-        // -----------------------------------------------------
+        // Target
 
-        [self.webSafeTargetControl.topAnchor
-            constraintEqualToAnchor:self.webSafeSubtitleLabel.bottomAnchor
+        [self.colorPaletteTargetControl.topAnchor
+            constraintEqualToAnchor:self.colorPaletteSubtitleLabel.bottomAnchor
                            constant:12],
 
-        [self.webSafeTargetControl.leadingAnchor
-            constraintEqualToAnchor:self.webSafeTitleLabel.leadingAnchor],
+        [self.colorPaletteTargetControl.leadingAnchor
+            constraintEqualToAnchor:self.colorPaletteTitleLabel.leadingAnchor],
 
-        [self.webSafeTargetControl.widthAnchor
-            constraintEqualToConstant:220],
+        [self.colorPaletteTargetControl.trailingAnchor
+            constraintEqualToAnchor:self.view.trailingAnchor
+                           constant:-24],
 
 
-        // -----------------------------------------------------
-        // Web Safe Picker
-        // -----------------------------------------------------
+        // Modern Color Palette
 
-        [self.webSafePicker.topAnchor
-            constraintEqualToAnchor:self.webSafeTargetControl.bottomAnchor
+        [self.colorPaletteView.topAnchor
+            constraintEqualToAnchor:self.colorPaletteTargetControl.bottomAnchor
                            constant:14],
 
-        [self.webSafePicker.leadingAnchor
-            constraintEqualToAnchor:self.webSafeTitleLabel.leadingAnchor],
+        [self.colorPaletteView.leadingAnchor
+            constraintEqualToAnchor:self.colorPaletteTitleLabel.leadingAnchor],
 
-        [self.webSafePicker.trailingAnchor
-            constraintLessThanOrEqualToAnchor:self.view.trailingAnchor
-                                      constant:-32],
+        [self.colorPaletteView.trailingAnchor
+            constraintEqualToAnchor:self.view.trailingAnchor
+                           constant:-24],
 
-        [self.webSafePicker.bottomAnchor
+        [self.colorPaletteView.bottomAnchor
             constraintLessThanOrEqualToAnchor:self.view.bottomAnchor
                                       constant:-32]
     ]];
@@ -588,19 +565,7 @@
                           format:self.currentFormat];
 
 
-    /*
-     Mientras el usuario escribe un valor incompleto,
-     simplemente esperamos.
-
-     No mostramos errores mientras escribe.
-    */
-
     if (!color) {
-
-        /*
-         Como ya no existen dos colores válidos,
-         ocultamos la paleta.
-        */
 
         [self.paletteView clear];
 
@@ -608,26 +573,10 @@
     }
 
 
-    /*
-     El valor es válido.
-
-     Sincronizamos el ColorWell.
-    */
-
     inputView.color =
         color;
 
-
-    /*
-     Si existía un error anterior, ya no aplica.
-    */
-
     [inputView clearValidationError];
-
-
-    /*
-     Intentamos generar inmediatamente la paleta.
-    */
 
     [self updatePaletteIfPossible];
 }
@@ -644,46 +593,30 @@
     }
 
 
-    /*
-     El ColorWell siempre proporciona un color válido.
-    */
-
     [inputView clearValidationError];
 
-
-    /*
-     Sincronizamos el valor textual con el formato activo.
-    */
 
     inputView.textField.stringValue =
         [color stringForFormat:self.currentFormat];
 
 
-    /*
-     Recalculamos automáticamente la paleta.
-    */
-
     [self updatePaletteIfPossible];
 
-
-    /*
-     Regresamos el foco al campo correspondiente.
-    */
 
     [self.view.window
         makeFirstResponder:inputView.textField];
 }
 
 
-#pragma mark - Web Safe Color Picker Delegate
+#pragma mark - Color Palette Delegate
 
-- (void)webSafeColorPicker:(WebSafeColorPickerView *)picker
-            didSelectColor:(CBColor *)color {
+- (void)colorPaletteView:(ColorPaletteView *)paletteView
+          didSelectColor:(CBColor *)color {
 
     ColorInputView *targetInput;
 
 
-    if (self.webSafeTargetControl.selectedSegment == 1) {
+    if (self.colorPaletteTargetControl.selectedSegment == 1) {
 
         targetInput =
             self.color2Input;
@@ -695,39 +628,26 @@
     }
 
 
-    /*
-     Actualizamos el texto según el formato activo.
-    */
-
     targetInput.textField.stringValue =
         [color stringForFormat:self.currentFormat];
 
-
-    /*
-     Actualizamos el ColorWell.
-    */
 
     targetInput.color =
         color;
 
 
-    /*
-     La selección Web Safe siempre es válida.
-    */
-
     [targetInput clearValidationError];
 
 
     /*
-     Recalculamos inmediatamente la paleta.
+     1.1.0 Live Palette integration.
+
+     Selecting a color from the modern palette immediately
+     updates the generated blend when both endpoints are valid.
     */
 
     [self updatePaletteIfPossible];
 
-
-    /*
-     Regresamos el foco al campo correspondiente.
-    */
 
     [self.view.window
         makeFirstResponder:targetInput.textField];
@@ -738,28 +658,15 @@
 
 - (void)midpointsChanged:(NSStepper *)sender {
 
-    /*
-     Actualizamos el número mostrado.
-    */
-
     self.midpointsField.integerValue =
         sender.integerValue;
 
-
-    /*
-     Como el número de colores intermedios cambió,
-     regeneramos inmediatamente la paleta.
-    */
 
     [self updatePaletteIfPossible];
 }
 
 
 - (void)formatChanged:(NSSegmentedControl *)sender {
-
-    // =========================================================
-    // Determine Formats
-    // =========================================================
 
     CBColorFormat previousFormat =
         self.currentFormat;
@@ -796,21 +703,9 @@
     }
 
 
-    // =========================================================
-    // Clear Validation
-    // =========================================================
-
     [self.color1Input clearValidationError];
     [self.color2Input clearValidationError];
 
-
-    // =========================================================
-    // Parse Existing Values
-    // =========================================================
-
-    /*
-     Primero interpretamos los valores con el formato anterior.
-    */
 
     CBColor *color1 =
         [CBColor colorFromString:
@@ -824,17 +719,9 @@
                           format:previousFormat];
 
 
-    // =========================================================
-    // Update Format
-    // =========================================================
-
     self.currentFormat =
         newFormat;
 
-
-    // =========================================================
-    // Convert Color 1
-    // =========================================================
 
     if (color1) {
 
@@ -846,10 +733,6 @@
     }
 
 
-    // =========================================================
-    // Convert Color 2
-    // =========================================================
-
     if (color2) {
 
         self.color2Input.textField.stringValue =
@@ -860,46 +743,18 @@
     }
 
 
-    // =========================================================
-    // Update Palette Format
-    // =========================================================
-
-    /*
-     Si la paleta ya existe, sus colores no cambian.
-     Solo cambia su representación textual.
-    */
-
     [self.paletteView
         updateFormat:newFormat];
 
 
-    // =========================================================
-    // Update Placeholders
-    // =========================================================
-
     [self updatePlaceholders];
 
-
-    // =========================================================
-    // Ensure Palette State
-    // =========================================================
-
-    /*
-     Si ambos colores continúan siendo válidos,
-     dejamos la paleta sincronizada.
-
-     Si alguno no lo es, se limpiará.
-    */
 
     [self updatePaletteIfPossible];
 }
 
 
 - (void)clearColors:(id)sender {
-
-    // =========================================================
-    // Inputs
-    // =========================================================
 
     self.color1Input.textField.stringValue =
         @"";
@@ -908,17 +763,9 @@
         @"";
 
 
-    // =========================================================
-    // Validation
-    // =========================================================
-
     [self.color1Input clearValidationError];
     [self.color2Input clearValidationError];
 
-
-    // =========================================================
-    // Previews
-    // =========================================================
 
     self.color1Input.color =
         nil;
@@ -926,10 +773,6 @@
     self.color2Input.color =
         nil;
 
-
-    // =========================================================
-    // Midpoints
-    // =========================================================
 
     self.midpointsStepper.integerValue =
         1;
@@ -938,37 +781,17 @@
         1;
 
 
-    // =========================================================
-    // Palette
-    // =========================================================
-
     [self.paletteView clear];
 
-
-    // =========================================================
-    // Focus
-    // =========================================================
 
     [self.view.window
         makeFirstResponder:self.color1Input.textField];
 }
 
 
-#pragma mark - Palette
+#pragma mark - Generated Palette
 
 - (void)updatePaletteIfPossible {
-
-    /*
-     Este es ahora el único lugar encargado de generar
-     automáticamente la paleta.
-
-     Cualquier cambio relevante termina llamando a este método.
-    */
-
-
-    // =========================================================
-    // Parse Color 1
-    // =========================================================
 
     CBColor *color1 =
         [CBColor colorFromString:
@@ -976,36 +799,19 @@
                           format:self.currentFormat];
 
 
-    // =========================================================
-    // Parse Color 2
-    // =========================================================
-
     CBColor *color2 =
         [CBColor colorFromString:
             self.color2Input.textField.stringValue
                           format:self.currentFormat];
 
 
-    // =========================================================
-    // Require Two Valid Colors
-    // =========================================================
-
     if (!color1 || !color2) {
-
-        /*
-         Una paleta solo tiene sentido cuando existen
-         dos colores válidos.
-        */
 
         [self.paletteView clear];
 
         return;
     }
 
-
-    // =========================================================
-    // Synchronize Previews
-    // =========================================================
 
     self.color1Input.color =
         color1;
@@ -1014,10 +820,6 @@
         color2;
 
 
-    // =========================================================
-    // Generate Palette
-    // =========================================================
-
     NSArray<CBColor *> *palette =
         [ColorBlenderEngine
             blendFromColor:color1
@@ -1025,10 +827,6 @@
                 midpoints:
                     self.midpointsStepper.integerValue];
 
-
-    // =========================================================
-    // Display Palette
-    // =========================================================
 
     [self.paletteView
         displayColors:palette
@@ -1042,10 +840,6 @@
 
     switch (self.currentFormat) {
 
-        // =====================================================
-        // HEX
-        // =====================================================
-
         case CBColorFormatHex:
 
             self.color1Input.textField.placeholderString =
@@ -1057,10 +851,6 @@
             break;
 
 
-        // =====================================================
-        // RGB
-        // =====================================================
-
         case CBColorFormatRGB:
 
             self.color1Input.textField.placeholderString =
@@ -1071,10 +861,6 @@
 
             break;
 
-
-        // =====================================================
-        // RGB Percentage
-        // =====================================================
 
         case CBColorFormatRGBPercent:
 
