@@ -21,7 +21,6 @@
 @property (nonatomic, strong) NSTextField *midpointsField;
 @property (nonatomic, strong) NSStepper *midpointsStepper;
 
-@property (nonatomic, strong) NSButton *blendButton;
 @property (nonatomic, strong) NSButton *clearButton;
 
 @property (nonatomic, strong) PaletteView *paletteView;
@@ -47,19 +46,25 @@
 #pragma mark - Lifecycle
 
 - (void)loadView {
+
     self.view =
         [[NSView alloc]
             initWithFrame:NSMakeRect(0, 0, 1050, 620)];
 }
 
+
 - (void)viewDidLoad {
+
     [super viewDidLoad];
 
-    self.currentFormat = CBColorFormatHex;
+    self.currentFormat =
+        CBColorFormatHex;
 
     [self setupInterface];
+
     [self updatePlaceholders];
 }
+
 
 #pragma mark - Interface
 
@@ -76,7 +81,8 @@
         [NSFont systemFontOfSize:28
                           weight:NSFontWeightSemibold];
 
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.titleLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
@@ -94,7 +100,8 @@
     self.subtitleLabel.textColor =
         NSColor.secondaryLabelColor;
 
-    self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.subtitleLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
@@ -109,8 +116,11 @@
         [[ColorInputView alloc]
             initWithTitle:@"Color 2"];
 
-    self.color1Input.delegate = self;
-    self.color2Input.delegate = self;
+    self.color1Input.delegate =
+        self;
+
+    self.color2Input.delegate =
+        self;
 
 
     // =========================================================
@@ -124,7 +134,8 @@
         [NSFont systemFontOfSize:13
                           weight:NSFontWeightSemibold];
 
-    formatLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    formatLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.formatControl =
@@ -138,9 +149,11 @@
             target:self
             action:@selector(formatChanged:)];
 
-    self.formatControl.selectedSegment = 0;
+    self.formatControl.selectedSegment =
+        0;
 
-    self.formatControl.translatesAutoresizingMaskIntoConstraints = NO;
+    self.formatControl.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
@@ -154,61 +167,56 @@
         [NSFont systemFontOfSize:13
                           weight:NSFontWeightSemibold];
 
-    midpointsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    midpointsLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.midpointsField =
-        [[NSTextField alloc] initWithFrame:NSZeroRect];
+        [[NSTextField alloc]
+            initWithFrame:NSZeroRect];
 
-    self.midpointsField.stringValue = @"1";
+    self.midpointsField.stringValue =
+        @"1";
 
     self.midpointsField.alignment =
         NSTextAlignmentCenter;
 
-    self.midpointsField.editable = NO;
+    self.midpointsField.editable =
+        NO;
 
-    self.midpointsField.translatesAutoresizingMaskIntoConstraints = NO;
+    self.midpointsField.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.midpointsStepper =
-        [[NSStepper alloc] initWithFrame:NSZeroRect];
+        [[NSStepper alloc]
+            initWithFrame:NSZeroRect];
 
-    self.midpointsStepper.minValue = 1;
-    self.midpointsStepper.maxValue = 10;
-    self.midpointsStepper.increment = 1;
-    self.midpointsStepper.integerValue = 1;
+    self.midpointsStepper.minValue =
+        1;
 
-    self.midpointsStepper.target = self;
+    self.midpointsStepper.maxValue =
+        10;
+
+    self.midpointsStepper.increment =
+        1;
+
+    self.midpointsStepper.integerValue =
+        1;
+
+    self.midpointsStepper.target =
+        self;
 
     self.midpointsStepper.action =
         @selector(midpointsChanged:);
 
-    self.midpointsStepper.translatesAutoresizingMaskIntoConstraints = NO;
+    self.midpointsStepper.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
-    // Actions
+    // Clear
     // =========================================================
-
-    NSTextField *actionsLabel =
-        [NSTextField labelWithString:@"Actions"];
-
-    actionsLabel.font =
-        [NSFont systemFontOfSize:13
-                          weight:NSFontWeightSemibold];
-
-    actionsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-
-
-    self.blendButton =
-        [NSButton buttonWithTitle:@"Blend Colors"
-                           target:self
-                           action:@selector(blendColors:)];
-
-    self.blendButton.keyEquivalent = @"\r";
-
-    self.blendButton.translatesAutoresizingMaskIntoConstraints = NO;
-
 
     self.clearButton =
         [NSButton buttonWithTitle:@"Clear"
@@ -218,7 +226,8 @@
     self.clearButton.bezelStyle =
         NSBezelStyleAccessoryBarAction;
 
-    self.clearButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.clearButton.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
@@ -235,14 +244,17 @@
     // =========================================================
 
     self.verticalSeparator =
-        [[NSView alloc] initWithFrame:NSZeroRect];
+        [[NSView alloc]
+            initWithFrame:NSZeroRect];
 
-    self.verticalSeparator.wantsLayer = YES;
+    self.verticalSeparator.wantsLayer =
+        YES;
 
     self.verticalSeparator.layer.backgroundColor =
         NSColor.separatorColor.CGColor;
 
-    self.verticalSeparator.translatesAutoresizingMaskIntoConstraints = NO;
+    self.verticalSeparator.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     // =========================================================
@@ -256,7 +268,8 @@
         [NSFont systemFontOfSize:13
                           weight:NSFontWeightSemibold];
 
-    self.webSafeTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.webSafeTitleLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.webSafeSubtitleLabel =
@@ -270,7 +283,8 @@
     self.webSafeSubtitleLabel.textColor =
         NSColor.secondaryLabelColor;
 
-    self.webSafeSubtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.webSafeSubtitleLabel.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.webSafeTargetControl =
@@ -283,16 +297,19 @@
             target:nil
             action:nil];
 
-    self.webSafeTargetControl.selectedSegment = 0;
+    self.webSafeTargetControl.selectedSegment =
+        0;
 
-    self.webSafeTargetControl.translatesAutoresizingMaskIntoConstraints = NO;
+    self.webSafeTargetControl.translatesAutoresizingMaskIntoConstraints =
+        NO;
 
 
     self.webSafePicker =
         [[WebSafeColorPickerView alloc]
             initWithFrame:NSZeroRect];
 
-    self.webSafePicker.delegate = self;
+    self.webSafePicker.delegate =
+        self;
 
 
     // =========================================================
@@ -312,8 +329,6 @@
     [self.view addSubview:self.midpointsField];
     [self.view addSubview:self.midpointsStepper];
 
-    [self.view addSubview:actionsLabel];
-    [self.view addSubview:self.blendButton];
     [self.view addSubview:self.clearButton];
 
     [self.view addSubview:self.paletteView];
@@ -458,30 +473,15 @@
 
 
         // -----------------------------------------------------
-        // Actions
+        // Clear
         // -----------------------------------------------------
 
-        [actionsLabel.topAnchor
-            constraintEqualToAnchor:formatLabel.topAnchor],
-
-        [actionsLabel.leadingAnchor
+        [self.clearButton.leadingAnchor
             constraintEqualToAnchor:self.midpointsStepper.trailingAnchor
                            constant:24],
 
-
-        [self.blendButton.topAnchor
-            constraintEqualToAnchor:self.formatControl.topAnchor],
-
-        [self.blendButton.leadingAnchor
-            constraintEqualToAnchor:actionsLabel.leadingAnchor],
-
-
-        [self.clearButton.leadingAnchor
-            constraintEqualToAnchor:self.blendButton.trailingAnchor
-                           constant:8],
-
         [self.clearButton.centerYAnchor
-            constraintEqualToAnchor:self.blendButton.centerYAnchor],
+            constraintEqualToAnchor:self.formatControl.centerYAnchor],
 
         [self.clearButton.trailingAnchor
             constraintLessThanOrEqualToAnchor:self.color1Input.trailingAnchor],
@@ -574,6 +574,7 @@
     ]];
 }
 
+
 #pragma mark - Color Input Delegate
 
 - (void)colorInputViewDidChange:(ColorInputView *)inputView {
@@ -581,29 +582,54 @@
     NSString *value =
         inputView.textField.stringValue;
 
+
     CBColor *color =
         [CBColor colorFromString:value
                           format:self.currentFormat];
 
 
     /*
-     No mostramos errores mientras el usuario está escribiendo.
-     La validación definitiva ocurre al presionar Blend Colors.
+     Mientras el usuario escribe un valor incompleto,
+     simplemente esperamos.
+
+     No mostramos errores mientras escribe.
     */
 
     if (!color) {
+
+        /*
+         Como ya no existen dos colores válidos,
+         ocultamos la paleta.
+        */
+
+        [self.paletteView clear];
+
         return;
     }
 
 
     /*
-     Si ya es válido, sincronizamos el preview y eliminamos
-     cualquier error previo.
+     El valor es válido.
+
+     Sincronizamos el ColorWell.
     */
 
-    inputView.color = color;
+    inputView.color =
+        color;
+
+
+    /*
+     Si existía un error anterior, ya no aplica.
+    */
 
     [inputView clearValidationError];
+
+
+    /*
+     Intentamos generar inmediatamente la paleta.
+    */
+
+    [self updatePaletteIfPossible];
 }
 
 
@@ -612,21 +638,21 @@
     CBColor *color =
         inputView.color;
 
+
     if (!color) {
         return;
     }
 
 
     /*
-     El ColorWell siempre produce un color válido.
+     El ColorWell siempre proporciona un color válido.
     */
 
     [inputView clearValidationError];
 
 
     /*
-     Convertimos el color a la representación actualmente
-     seleccionada.
+     Sincronizamos el valor textual con el formato activo.
     */
 
     inputView.textField.stringValue =
@@ -634,12 +660,20 @@
 
 
     /*
-     Regresamos el foco al campo.
+     Recalculamos automáticamente la paleta.
+    */
+
+    [self updatePaletteIfPossible];
+
+
+    /*
+     Regresamos el foco al campo correspondiente.
     */
 
     [self.view.window
         makeFirstResponder:inputView.textField];
 }
+
 
 #pragma mark - Web Safe Color Picker Delegate
 
@@ -650,43 +684,74 @@
 
 
     if (self.webSafeTargetControl.selectedSegment == 1) {
-        targetInput = self.color2Input;
+
+        targetInput =
+            self.color2Input;
+
     } else {
-        targetInput = self.color1Input;
+
+        targetInput =
+            self.color1Input;
     }
 
 
     /*
-     Actualizamos texto y preview.
+     Actualizamos el texto según el formato activo.
     */
 
     targetInput.textField.stringValue =
         [color stringForFormat:self.currentFormat];
 
-    targetInput.color = color;
+
+    /*
+     Actualizamos el ColorWell.
+    */
+
+    targetInput.color =
+        color;
 
 
     /*
-     Un Web Safe Color siempre es válido.
+     La selección Web Safe siempre es válida.
     */
 
     [targetInput clearValidationError];
 
 
     /*
-     Regresamos el foco al campo seleccionado.
+     Recalculamos inmediatamente la paleta.
+    */
+
+    [self updatePaletteIfPossible];
+
+
+    /*
+     Regresamos el foco al campo correspondiente.
     */
 
     [self.view.window
         makeFirstResponder:targetInput.textField];
 }
 
+
 #pragma mark - Actions
 
 - (void)midpointsChanged:(NSStepper *)sender {
 
+    /*
+     Actualizamos el número mostrado.
+    */
+
     self.midpointsField.integerValue =
         sender.integerValue;
+
+
+    /*
+     Como el número de colores intermedios cambió,
+     regeneramos inmediatamente la paleta.
+    */
+
+    [self updatePaletteIfPossible];
 }
 
 
@@ -705,19 +770,23 @@
     switch (sender.selectedSegment) {
 
         case 0:
-            newFormat = CBColorFormatHex;
+            newFormat =
+                CBColorFormatHex;
             break;
 
         case 1:
-            newFormat = CBColorFormatRGB;
+            newFormat =
+                CBColorFormatRGB;
             break;
 
         case 2:
-            newFormat = CBColorFormatRGBPercent;
+            newFormat =
+                CBColorFormatRGBPercent;
             break;
 
         default:
-            newFormat = CBColorFormatHex;
+            newFormat =
+                CBColorFormatHex;
             break;
     }
 
@@ -731,11 +800,6 @@
     // Clear Validation
     // =========================================================
 
-    /*
-     Un mensaje correspondiente al formato anterior no debe
-     permanecer visible después de cambiar de formato.
-    */
-
     [self.color1Input clearValidationError];
     [self.color2Input clearValidationError];
 
@@ -745,15 +809,14 @@
     // =========================================================
 
     /*
-     Los valores existentes todavía pertenecen al formato
-     anterior, por eso los interpretamos antes de cambiar
-     currentFormat.
+     Primero interpretamos los valores con el formato anterior.
     */
 
     CBColor *color1 =
         [CBColor colorFromString:
             self.color1Input.textField.stringValue
                           format:previousFormat];
+
 
     CBColor *color2 =
         [CBColor colorFromString:
@@ -762,7 +825,7 @@
 
 
     // =========================================================
-    // Update Current Format
+    // Update Format
     // =========================================================
 
     self.currentFormat =
@@ -798,14 +861,12 @@
 
 
     // =========================================================
-    // Update Palette Representation
+    // Update Palette Format
     // =========================================================
 
     /*
-     No recalculamos la mezcla.
-
-     Únicamente cambiamos la representación textual de los
-     colores existentes.
+     Si la paleta ya existe, sus colores no cambian.
+     Solo cambia su representación textual.
     */
 
     [self.paletteView
@@ -817,120 +878,20 @@
     // =========================================================
 
     [self updatePlaceholders];
-}
-
-
-- (void)blendColors:(id)sender {
-
-    // =========================================================
-    // Parse Colors
-    // =========================================================
-
-    CBColor *color1 =
-        [CBColor colorFromString:
-            self.color1Input.textField.stringValue
-                          format:self.currentFormat];
-
-
-    CBColor *color2 =
-        [CBColor colorFromString:
-            self.color2Input.textField.stringValue
-                          format:self.currentFormat];
 
 
     // =========================================================
-    // Reset Previous Validation
+    // Ensure Palette State
     // =========================================================
 
-    [self.color1Input clearValidationError];
-    [self.color2Input clearValidationError];
+    /*
+     Si ambos colores continúan siendo válidos,
+     dejamos la paleta sincronizada.
 
+     Si alguno no lo es, se limpiará.
+    */
 
-    // =========================================================
-    // Validate Color 1
-    // =========================================================
-
-    if (!color1) {
-
-        [self.color1Input
-            showValidationError:
-                [self validationMessageForCurrentFormat]];
-    }
-
-
-    // =========================================================
-    // Validate Color 2
-    // =========================================================
-
-    if (!color2) {
-
-        [self.color2Input
-            showValidationError:
-                [self validationMessageForCurrentFormat]];
-    }
-
-
-    // =========================================================
-    // Stop On Invalid Input
-    // =========================================================
-
-    if (!color1 || !color2) {
-
-        NSBeep();
-
-
-        /*
-         Colocamos el cursor en el primer campo inválido.
-        */
-
-        if (!color1) {
-
-            [self.view.window
-                makeFirstResponder:
-                    self.color1Input.textField];
-
-        } else {
-
-            [self.view.window
-                makeFirstResponder:
-                    self.color2Input.textField];
-        }
-
-
-        return;
-    }
-
-
-    // =========================================================
-    // Synchronize Previews
-    // =========================================================
-
-    self.color1Input.color =
-        color1;
-
-    self.color2Input.color =
-        color2;
-
-
-    // =========================================================
-    // Generate Palette
-    // =========================================================
-
-    NSArray<CBColor *> *palette =
-        [ColorBlenderEngine
-            blendFromColor:color1
-                   toColor:color2
-                midpoints:
-                    self.midpointsStepper.integerValue];
-
-
-    // =========================================================
-    // Display Palette
-    // =========================================================
-
-    [self.paletteView
-        displayColors:palette
-               format:self.currentFormat];
+    [self updatePaletteIfPossible];
 }
 
 
@@ -992,26 +953,90 @@
         makeFirstResponder:self.color1Input.textField];
 }
 
-#pragma mark - Helpers
 
-- (NSString *)validationMessageForCurrentFormat {
+#pragma mark - Palette
 
-    switch (self.currentFormat) {
+- (void)updatePaletteIfPossible {
 
-        case CBColorFormatHex:
-            return @"Enter a valid HEX color.";
+    /*
+     Este es ahora el único lugar encargado de generar
+     automáticamente la paleta.
 
-        case CBColorFormatRGB:
-            return @"Enter a valid RGB color.";
+     Cualquier cambio relevante termina llamando a este método.
+    */
 
-        case CBColorFormatRGBPercent:
-            return @"Enter a valid RGB% color.";
+
+    // =========================================================
+    // Parse Color 1
+    // =========================================================
+
+    CBColor *color1 =
+        [CBColor colorFromString:
+            self.color1Input.textField.stringValue
+                          format:self.currentFormat];
+
+
+    // =========================================================
+    // Parse Color 2
+    // =========================================================
+
+    CBColor *color2 =
+        [CBColor colorFromString:
+            self.color2Input.textField.stringValue
+                          format:self.currentFormat];
+
+
+    // =========================================================
+    // Require Two Valid Colors
+    // =========================================================
+
+    if (!color1 || !color2) {
+
+        /*
+         Una paleta solo tiene sentido cuando existen
+         dos colores válidos.
+        */
+
+        [self.paletteView clear];
+
+        return;
     }
 
 
-    return @"Enter a valid color.";
+    // =========================================================
+    // Synchronize Previews
+    // =========================================================
+
+    self.color1Input.color =
+        color1;
+
+    self.color2Input.color =
+        color2;
+
+
+    // =========================================================
+    // Generate Palette
+    // =========================================================
+
+    NSArray<CBColor *> *palette =
+        [ColorBlenderEngine
+            blendFromColor:color1
+                   toColor:color2
+                midpoints:
+                    self.midpointsStepper.integerValue];
+
+
+    // =========================================================
+    // Display Palette
+    // =========================================================
+
+    [self.paletteView
+        displayColors:palette
+               format:self.currentFormat];
 }
 
+
+#pragma mark - Helpers
 
 - (void)updatePlaceholders {
 
